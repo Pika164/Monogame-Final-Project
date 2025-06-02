@@ -106,20 +106,23 @@ namespace Monogame_Final_Project
 
         protected override void Update(GameTime gameTime)
         {
-
+            mouseState = Mouse.GetState();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             if (screen == Screen.Intro)
             {
-
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    screen = Screen.Level1;
+                }
             }
 
             if (screen == Screen.Level1)
             {
                 keyboardState = Keyboard.GetState();
-                mouseState = Mouse.GetState();
+                
 
                 playerSpeed.X = 0;
                 playerSpeed.Y = 0;
