@@ -28,12 +28,15 @@ namespace Monogame_Final_Project
         Texture2D stageTwoFillingTexture;
         Texture2D currentPlayerTexture;
         Texture2D rectangleTexture;
+        Texture2D introScreenTexture;
+        Texture2D introButtonTexture;
 
         Rectangle playerRect;
         Rectangle window;
         Rectangle stageOneRect;
         Rectangle stageOneFillingRect;
         Rectangle goalArea1Rect;
+        Rectangle introButtonRect;
 
         List<Rectangle> stageOneBarriers;
         List<Rectangle> stageTwoBarriers;
@@ -72,6 +75,8 @@ namespace Monogame_Final_Project
 
             playerSpeed = new Vector2(0,0);
 
+            introButtonRect = new Rectangle(500,450,240,72);
+
             stageOneBarriers = new List<Rectangle>();
 
             base.Initialize();
@@ -100,7 +105,8 @@ namespace Monogame_Final_Project
             stageOneFillingTexture = Content.Load<Texture2D>("stageFilling");
             stageTwoFillingTexture = Content.Load<Texture2D>("stageFillingTwo");
             rectangleTexture = Content.Load<Texture2D>("images");
-
+            introButtonTexture = Content.Load<Texture2D>("introButton");
+            introScreenTexture = Content.Load<Texture2D>("introScreen");
 
         }
 
@@ -113,9 +119,13 @@ namespace Monogame_Final_Project
 
             if (screen == Screen.Intro)
             {
+
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    screen = Screen.Level1;
+                    if (introButtonRect.Contains(mouseState.Position))
+                    {
+                        screen = Screen.Level1;
+                    }
                 }
             }
 
@@ -169,6 +179,13 @@ namespace Monogame_Final_Project
             // TODO: Add your drawing code here
 
             _spriteBatch.Begin();
+
+            if (screen == Screen.Intro)
+            {
+                _spriteBatch.Draw(introScreenTexture, new Vector2(0,0), Color.White);
+                
+                _spriteBatch.Draw(introButtonTexture,introButtonRect,Color.White);
+            }
 
             if (screen == Screen.Level1)
             {
