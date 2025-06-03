@@ -30,8 +30,11 @@ namespace Monogame_Final_Project
         Texture2D rectangleTexture;
         Texture2D introScreenTexture;
         Texture2D introButtonTexture;
+        Texture2D enemyTexture;
 
+        Rectangle enemyRect;
         Rectangle playerRect;
+        Vector2 playerLocation;
         Rectangle window;
         Rectangle stageOneRect;
         Rectangle stageOneFillingRect;
@@ -44,8 +47,10 @@ namespace Monogame_Final_Project
         Vector2 playerSpeed;
 
         KeyboardState keyboardState;
+        KeyboardState oldState;
 
         MouseState mouseState;
+
 
         public Game1()
         {
@@ -65,7 +70,9 @@ namespace Monogame_Final_Project
 
             // TODO: Add your initialization logic here
 
-            playerRect = new Rectangle(168,250,15,15);
+            playerLocation = new Vector2(168, 250);
+
+            playerRect = new Rectangle(168, 250, 15,15);
 
             stageOneRect = new Rectangle(-150,-100,1100,900);
 
@@ -91,6 +98,7 @@ namespace Monogame_Final_Project
 
             stageOneBarriers.Add(new Rectangle(39, 225, 50, 225));
             stageOneBarriers.Add(new Rectangle(708, 225, 50, 225));
+
         }
 
         protected override void LoadContent()
@@ -107,6 +115,7 @@ namespace Monogame_Final_Project
             rectangleTexture = Content.Load<Texture2D>("images");
             introButtonTexture = Content.Load<Texture2D>("introButton");
             introScreenTexture = Content.Load<Texture2D>("introScreen");
+            enemyTexture = Content.Load<Texture2D>("projectile");
 
         }
 
@@ -132,8 +141,8 @@ namespace Monogame_Final_Project
             if (screen == Screen.Level1)
             {
                 keyboardState = Keyboard.GetState();
+                KeyboardState newState = Keyboard.GetState();
                 
-
                 playerSpeed.X = 0;
                 playerSpeed.Y = 0;
 
@@ -141,31 +150,36 @@ namespace Monogame_Final_Project
 
                 if (keyboardState.IsKeyDown(Keys.Left))
                 {
-                    playerSpeed.X -= 1;
+                    playerSpeed.X -= (float)1.5;
                 }
                 if (keyboardState.IsKeyDown(Keys.Right))
                 {
-                    playerSpeed.X += 1;
+                    playerSpeed.X += (float)1.5;
                 }
                 if (keyboardState.IsKeyDown(Keys.Up))
                 {
-                    playerSpeed.Y -= 1;
+                    playerSpeed.Y -= (float)1.5;
                 }
                 if (keyboardState.IsKeyDown(Keys.Down))
                 {
-                    playerSpeed.Y += 1;
+                    playerSpeed.Y += (float)1.5;
                 }
 
-                if (goalArea1Rect.Intersects(playerRect))
+                if (goalArea1Rect.Contains(playerRect))
                 {
-                    Exit();
+                    screen = Screen.Level2;
                 }
-                playerRect.X += (int)playerSpeed.X;
-                playerRect.Y += (int)playerSpeed.Y;
+
+                playerLocation += playerSpeed;
+                playerRect.Location = playerLocation.ToPoint();
 
                 foreach (Rectangle barrier in stageOneBarriers)
                     if (playerRect.Intersects(barrier))
-                        playerRect.Offset(-playerSpeed);
+                    {
+                        playerLocation -= playerSpeed;
+                        playerRect.Location = playerLocation.ToPoint();
+                    }
+
             }
             // TODO: Add your update logic here
 
@@ -199,6 +213,7 @@ namespace Monogame_Final_Project
                 _spriteBatch.Draw(stageOneFillingTexture, stageOneFillingRect, Color.White);
 
                 _spriteBatch.Draw(playerTexture, playerRect, Color.White);
+
             }
             _spriteBatch.End();
 
