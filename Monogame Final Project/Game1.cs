@@ -3,6 +3,7 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Monogame_Final_Project
 {
@@ -103,11 +104,11 @@ namespace Monogame_Final_Project
 
             enemyRect3 = new Rectangle(222,372,33,33);
 
-            enemySpeed = new Vector2(7,0);
+            enemySpeed = new Vector2(0,0);
 
-            enemySpeed2 = new Vector2(4,0);
+            enemySpeed2 = new Vector2(3,0);
 
-            enemySpeed3 = new Vector2(4,0);
+            enemySpeed3 = new Vector2(3,0);
 
             stageTwoRect = new Rectangle(-150, -175, 1100, 900);
 
@@ -118,7 +119,7 @@ namespace Monogame_Final_Project
             stageTwoBarriers = new List<Rectangle>();
 
             base.Initialize();
-            stageOneBarriers.Add(new Rectangle(195,260,30,150));
+            stageOneBarriers.Add(new Rectangle(195,255,30,145));
             stageOneBarriers.Add(new Rectangle(573, 264, 30, 150));
 
             stageOneBarriers.Add(new Rectangle(195, 220, 341, 40));
@@ -131,7 +132,16 @@ namespace Monogame_Final_Project
             stageOneBarriers.Add(new Rectangle(708, 225, 50, 225));
 
             stageTwoBarriers.Add(new Rectangle(159, 240, 480, 75));
+            stageTwoBarriers.Add(new Rectangle(90,126,75,300));
 
+            stageTwoBarriers.Add(new Rectangle(50, 47, 40, 475));
+            stageTwoBarriers.Add(new Rectangle(53, 27, 625, 20));
+
+            stageTwoBarriers.Add(new Rectangle(678,27,35,135));
+            stageTwoBarriers.Add(new Rectangle(680, 390, 35, 135));
+
+            stageTwoBarriers.Add(new Rectangle(715, 27, 40, 475));
+            stageTwoBarriers.Add(new Rectangle(90, 500, 600, 35));
         }
 
         protected override void LoadContent()
@@ -151,7 +161,7 @@ namespace Monogame_Final_Project
             enemyTexture = Content.Load<Texture2D>("enemy");
             enemyTexture2 = Content.Load<Texture2D>("enemy (1)");
             enemyTexture3 = Content.Load<Texture2D>("enemy (2)");
-
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -342,14 +352,14 @@ namespace Monogame_Final_Project
 
             if (screen == Screen.Level2)
             {
+                foreach (Rectangle barrier in stageTwoBarriers)
+                    _spriteBatch.Draw(rectangleTexture, barrier, Color.White);
+
                 _spriteBatch.Draw(stageTwoTexture, stageTwoRect, Color.White);
 
                 _spriteBatch.Draw(stageTwoFillingTexture, stageTwoFillingRect, Color.White);
 
                 _spriteBatch.Draw(playerTexture, playerRect2, Color.White);
-
-                foreach (Rectangle barrier in stageTwoBarriers)
-                    _spriteBatch.Draw(rectangleTexture, barrier, Color.White);
 
             }
             _spriteBatch.End();
