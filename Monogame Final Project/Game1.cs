@@ -35,7 +35,11 @@ namespace Monogame_Final_Project
         Texture2D enemyTexture;
         Texture2D enemyTexture2;
         Texture2D enemyTexture3;
+        Texture2D endScreenTexture;
+        Texture2D endButtonTexture;
 
+        Rectangle endButtonRect;
+        Rectangle endScreenRect;
         Rectangle enemyRect;
         Rectangle enemyRect2;
         Rectangle enemyRect3;
@@ -46,6 +50,7 @@ namespace Monogame_Final_Project
         Rectangle stageOneRect;
         Rectangle stageOneFillingRect;
         Rectangle goalArea1Rect;
+        Rectangle goalArea2Rect;
         Rectangle introButtonRect;
         Rectangle stageTwoRect;
         Rectangle stageTwoFillingRect;
@@ -71,6 +76,9 @@ namespace Monogame_Final_Project
 
         SpriteFont deathFont;
 
+        SoundEffect bgMusic;
+        SoundEffectInstance bgMusicplaying;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -87,6 +95,8 @@ namespace Monogame_Final_Project
             _graphics.PreferredBackBufferHeight = window.Height;
             _graphics.ApplyChanges();
 
+
+
             // TODO: Add your initialization logic here
 
             playerLocation = new Vector2(168, 250);
@@ -100,6 +110,7 @@ namespace Monogame_Final_Project
             stageOneFillingRect = new Rectangle(-150, -100, 1100, 900);
 
             goalArea1Rect = new Rectangle(607,267,100,180);
+            goalArea2Rect = new Rectangle(95, 427, 70, 70);
 
             playerSpeed = new Vector2(0,0);
 
@@ -133,7 +144,9 @@ namespace Monogame_Final_Project
 
             fillingRect3 = new Rectangle(0,0,800,222);
 
-            fillingRect4 = new Rectangle(0,450,800,150);
+            fillingRect4 = new Rectangle(0,452,800,150);
+
+            endScreenRect = new Rectangle(0,0,800,600);
 
             base.Initialize();
             stageOneBarriers.Add(new Rectangle(195,260,30,150));
@@ -159,6 +172,8 @@ namespace Monogame_Final_Project
 
             stageTwoBarriers.Add(new Rectangle(715, 27, 40, 475));
             stageTwoBarriers.Add(new Rectangle(90, 500, 600, 35));
+
+         
         }
 
         protected override void LoadContent()
@@ -179,12 +194,19 @@ namespace Monogame_Final_Project
             enemyTexture2 = Content.Load<Texture2D>("enemy (1)");
             enemyTexture3 = Content.Load<Texture2D>("enemy (2)");
             deathFont = Content.Load<SpriteFont>("death");
+            bgMusic = Content.Load<SoundEffect>("music");
+            endScreenTexture = Content.Load<Texture2D>("endScreen");
         }
 
         protected override void Update(GameTime gameTime)
         {
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
+
+
+            //sound 
+
+            bgMusic.Play();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -322,7 +344,6 @@ namespace Monogame_Final_Project
                     playerLocation.X = 168;
                     playerLocation.Y = 250;
                     playerRect.Location = playerLocation.ToPoint();
-                    deaths += 1;
                 }
 
                 if (fillingRect2.Intersects(playerRect))
@@ -330,7 +351,6 @@ namespace Monogame_Final_Project
                     playerLocation.X = 168;
                     playerLocation.Y = 250;
                     playerRect.Location = playerLocation.ToPoint();
-                    deaths += 1;
                 }
 
                 if (fillingRect3.Intersects(playerRect))
@@ -338,7 +358,6 @@ namespace Monogame_Final_Project
                     playerLocation.X = 168;
                     playerLocation.Y = 250;
                     playerRect.Location = playerLocation.ToPoint();
-                    deaths += 1;
                 }
 
                 if (fillingRect4.Intersects(playerRect))
@@ -346,7 +365,6 @@ namespace Monogame_Final_Project
                     playerLocation.X = 168;
                     playerLocation.Y = 250;
                     playerRect.Location = playerLocation.ToPoint();
-                    deaths += 1;
                 }
 
             }
@@ -389,6 +407,16 @@ namespace Monogame_Final_Project
                         playerRect2.Location = playerLocation.ToPoint();
                     }
 
+                if (goalArea2Rect.Contains(playerRect2))
+                {
+                    screen = Screen.End;
+                }
+
+            }
+
+            if (screen == Screen.End)
+            {
+                this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
             }
             // TODO: Add your update logic here
 
@@ -445,6 +473,8 @@ namespace Monogame_Final_Project
 
             if (screen == Screen.Level2)
             {
+                _spriteBatch.Draw(rectangleTexture, goalArea2Rect, Color.White);
+
                 foreach (Rectangle barrier in stageTwoBarriers)
                     _spriteBatch.Draw(rectangleTexture, barrier, Color.White);
 
@@ -454,7 +484,21 @@ namespace Monogame_Final_Project
 
                 _spriteBatch.Draw(playerTexture, playerRect2, Color.White);
 
+                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(700, 45), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(675, 15), Color.Black);
+
             }
+
+            if (screen == Screen.End)
+            {
+                _spriteBatch.Draw(endScreenTexture, endScreenRect, Color.White);
+
+                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(415, 200), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(390, 175), Color.Black);
+            }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
