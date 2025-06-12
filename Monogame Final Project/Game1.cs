@@ -11,7 +11,6 @@ namespace Monogame_Final_Project
     enum Screen
     {
         Intro,
-        Controls,
         Level1,
         Level2,
         End
@@ -58,6 +57,13 @@ namespace Monogame_Final_Project
         Rectangle fillingRect2;
         Rectangle fillingRect3;
         Rectangle fillingRect4;
+        Rectangle fillingRect5;
+        Rectangle enemyRect4;
+        Rectangle enemyRect5;
+        Rectangle enemyRect6;
+        Rectangle enemyRect7;
+        Rectangle enemyRect8;
+        Rectangle enemyRect9;
 
         List<Rectangle> stageOneBarriers;
         List<Rectangle> stageTwoBarriers;
@@ -66,6 +72,8 @@ namespace Monogame_Final_Project
         Vector2 enemySpeed;
         Vector2 enemySpeed2;
         Vector2 enemySpeed3;
+        Vector2 enemySpeed4;
+        Vector2 enemySpeed5;
 
         KeyboardState keyboardState;
         KeyboardState keyboardState2;
@@ -110,23 +118,32 @@ namespace Monogame_Final_Project
             stageOneFillingRect = new Rectangle(-150, -100, 1100, 900);
 
             goalArea1Rect = new Rectangle(607,267,100,180);
+
             goalArea2Rect = new Rectangle(95, 427, 70, 70);
 
             playerSpeed = new Vector2(0,0);
 
             introButtonRect = new Rectangle(500,450,240,72);
 
-            enemyRect = new Rectangle(220,320,35,35);
+            enemyRect = new Rectangle(225,320,36,36);
 
-            enemyRect2 = new Rectangle(222, 267, 33, 33);
+            enemyRect2 = new Rectangle(222, 267, 36, 36);
 
-            enemyRect3 = new Rectangle(222,372,33,33);
+            enemyRect3 = new Rectangle(222,372,36,36);
+
+            enemyRect4 = new Rectangle(220,50,30,75);
+
+            enemyRect5 = new Rectangle(220, 160, 30, 75);
 
             enemySpeed = new Vector2(0,0);
 
             enemySpeed2 = new Vector2(3,0);
 
             enemySpeed3 = new Vector2(3,0);
+
+            enemySpeed4 = new Vector2(3,0);
+
+            enemySpeed5 = new Vector2(3,0);
 
             stageTwoRect = new Rectangle(-150, -175, 1100, 900);
 
@@ -138,13 +155,15 @@ namespace Monogame_Final_Project
 
             deaths = 0;
 
-            fillingRect = new Rectangle(573, 264, 30, 200);
+            fillingRect = new Rectangle(573, 262, 30, 200);
 
-            fillingRect2 = new Rectangle(195, 260, 30, 150);
+            fillingRect2 = new Rectangle(195, 258, 30, 150);
 
             fillingRect3 = new Rectangle(0,0,800,222);
 
-            fillingRect4 = new Rectangle(0,452,800,150);
+            fillingRect4 = new Rectangle(0,450,800,150);
+
+            fillingRect5 = new Rectangle(37, 225, 50, 225);
 
             endScreenRect = new Rectangle(0,0,800,600);
 
@@ -237,30 +256,30 @@ namespace Monogame_Final_Project
 
                 this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
 
-                if (keyboardState.IsKeyDown(Keys.Left))
+                if (keyboardState.IsKeyDown(Keys.A))
                 {
                     playerSpeed.X -= (float)2.0;
                 }
-                if (keyboardState.IsKeyDown(Keys.Right))
+                if (keyboardState.IsKeyDown(Keys.D))
                 {
                     playerSpeed.X += (float)2.0;
                 }
-                if (keyboardState.IsKeyDown(Keys.Up))
+                if (keyboardState.IsKeyDown(Keys.W))
                 {
                     playerSpeed.Y -= (float)2.0;
                 }
-                if (keyboardState.IsKeyDown(Keys.Down))
+                if (keyboardState.IsKeyDown(Keys.S))
                 {
                     playerSpeed.Y += (float)2.0;
                 }
 
                 if (keyboardState.IsKeyDown(Keys.LeftShift))
                 {
-                    playerLocation.X += 10;
+                    playerLocation.X -= 10;
                     playerRect.Location = playerLocation.ToPoint();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.LeftShift))
+                if (keyboardState.IsKeyDown(Keys.RightShift))
                 {
                     playerLocation.X += 10;
                     playerRect.Location = playerLocation.ToPoint();
@@ -367,6 +386,13 @@ namespace Monogame_Final_Project
                     playerRect.Location = playerLocation.ToPoint();
                 }
 
+                if (fillingRect5.Intersects(playerRect))
+                {
+                    playerLocation.X = 168;
+                    playerLocation.Y = 250;
+                    playerRect.Location = playerLocation.ToPoint();
+                }
+
             }
 
             if (screen == Screen.Level2)
@@ -377,6 +403,8 @@ namespace Monogame_Final_Project
                 playerSpeed.Y = 0;
                 playerLocation.X = playerRect2.X;
                 playerLocation.Y = playerRect2.Y;
+                enemyRect4.X += (int)enemySpeed4.X;
+                enemyRect5.X += (int)enemySpeed5.X;
 
                 this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
 
@@ -399,6 +427,27 @@ namespace Monogame_Final_Project
 
                 playerLocation += playerSpeed;
                 playerRect2.Location = playerLocation.ToPoint();
+
+                foreach (Rectangle barrier in stageTwoBarriers)
+                    if (enemyRect4.Intersects(barrier))
+                    {
+                        enemySpeed4.X *= -1;
+                        enemySpeed5.X *= -1;
+                    }
+
+                if (enemyRect4.X <= 168)
+                {
+                    enemySpeed5.X *= -1;
+                    enemySpeed4.X *= -1;
+                }
+
+                if (enemyRect4.Intersects(playerRect2))
+                {
+                    playerRect2.X = 129;
+                    playerRect2.Y = 79;
+                    playerRect.Location = playerLocation.ToPoint();
+                    deaths += 1;
+                }
 
                 foreach (Rectangle barrier in stageTwoBarriers)
                     if (playerRect2.Intersects(barrier))
@@ -465,6 +514,8 @@ namespace Monogame_Final_Project
 
                 _spriteBatch.Draw(playerTexture, playerRect, Color.White);
 
+                _spriteBatch.Draw(rectangleTexture, fillingRect5, Color.White);
+
                 _spriteBatch.DrawString(deathFont, (deaths).ToString("000"), new Vector2(675, 45), Color.Black);
 
                 _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(655,15), Color.Black);
@@ -483,6 +534,13 @@ namespace Monogame_Final_Project
                 _spriteBatch.Draw(stageTwoFillingTexture, stageTwoFillingRect, Color.White);
 
                 _spriteBatch.Draw(playerTexture, playerRect2, Color.White);
+
+                _spriteBatch.Draw(enemyTexture, enemyRect4, Color.White);
+
+                _spriteBatch.Draw(enemyTexture, enemyRect5, Color.White);
+
+                foreach (Rectangle barrier in stageTwoBarriers)
+                    _spriteBatch.Draw(rectangleTexture, barrier, Color.White);
 
                 _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(700, 45), Color.Black);
 
