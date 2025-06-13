@@ -74,6 +74,8 @@ namespace Monogame_Final_Project
         Vector2 enemySpeed3;
         Vector2 enemySpeed4;
         Vector2 enemySpeed5;
+        Vector2 enemySpeed6;
+        Vector2 enemySpeed7;
 
         KeyboardState keyboardState;
         KeyboardState keyboardState2;
@@ -135,15 +137,21 @@ namespace Monogame_Final_Project
 
             enemyRect5 = new Rectangle(220, 160, 30, 75);
 
+            enemyRect6 = new Rectangle(630,50,30,120);
+
+            enemyRect7 = new Rectangle(675,385,30,75);
+
             enemySpeed = new Vector2(0,0);
 
             enemySpeed2 = new Vector2(3,0);
 
             enemySpeed3 = new Vector2(3,0);
 
-            enemySpeed4 = new Vector2(3,0);
+            enemySpeed4 = new Vector2(4,0);
 
-            enemySpeed5 = new Vector2(3,0);
+            enemySpeed5 = new Vector2(4,0);
+
+            enemySpeed6 = new Vector2(-2,0);
 
             stageTwoRect = new Rectangle(-150, -175, 1100, 900);
 
@@ -405,24 +413,25 @@ namespace Monogame_Final_Project
                 playerLocation.Y = playerRect2.Y;
                 enemyRect4.X += (int)enemySpeed4.X;
                 enemyRect5.X += (int)enemySpeed5.X;
+                enemyRect6.X += (int)enemySpeed6.X;
 
                 this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
 
                 if (keyboardState.IsKeyDown(Keys.Left))
                 {
-                    playerSpeed.X -= (float)1.0;
+                    playerSpeed.X -= (float)1.5;
                 }
                 if (keyboardState.IsKeyDown(Keys.Right))
                 {
-                    playerSpeed.X += (float)1.5;
+                    playerSpeed.X += (float)2.0;
                 }
                 if (keyboardState.IsKeyDown(Keys.Up))
                 {
-                    playerSpeed.Y -= (float)1.0;
+                    playerSpeed.Y -= (float)1.5;
                 }
                 if (keyboardState.IsKeyDown(Keys.Down))
                 {
-                    playerSpeed.Y += (float)1.5;
+                    playerSpeed.Y += (float)2.0;
                 }
 
                 playerLocation += playerSpeed;
@@ -442,6 +451,33 @@ namespace Monogame_Final_Project
                 }
 
                 if (enemyRect4.Intersects(playerRect2))
+                {
+                    playerRect2.X = 129;
+                    playerRect2.Y = 79;
+                    playerRect.Location = playerLocation.ToPoint();
+                    deaths += 1;
+                }
+
+                foreach (Rectangle barrier in stageTwoBarriers)
+                    if (enemyRect6.Intersects(barrier))
+                    {
+                        enemySpeed6.X *= -1;
+                    }
+
+                if (enemyRect6.X <= 168)
+                {
+                    enemySpeed6.X *= -1;
+                }
+
+                if (enemyRect6.Intersects(playerRect2))
+                {
+                    playerRect2.X = 129;
+                    playerRect2.Y = 79;
+                    playerRect.Location = playerLocation.ToPoint();
+                    deaths += 1;
+                }
+
+                if (enemyRect5.Intersects(playerRect2))
                 {
                     playerRect2.X = 129;
                     playerRect2.Y = 79;
@@ -539,6 +575,8 @@ namespace Monogame_Final_Project
 
                 _spriteBatch.Draw(enemyTexture, enemyRect5, Color.White);
 
+                _spriteBatch.Draw(enemyTexture, enemyRect6, Color.White);
+
                 foreach (Rectangle barrier in stageTwoBarriers)
                     _spriteBatch.Draw(rectangleTexture, barrier, Color.White);
 
@@ -552,7 +590,7 @@ namespace Monogame_Final_Project
             {
                 _spriteBatch.Draw(endScreenTexture, endScreenRect, Color.White);
 
-                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(415, 200), Color.Black);
+                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(415, 225), Color.Black);
 
                 _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(390, 175), Color.Black);
             }
