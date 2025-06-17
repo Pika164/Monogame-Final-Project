@@ -123,11 +123,11 @@ namespace Monogame_Final_Project
 
             introButtonRect = new Rectangle(500,450,240,72);
 
-            enemyRect = new Rectangle(225,320,36,36);
+            enemyRect = new Rectangle(230,320,36,36);
 
-            enemyRect2 = new Rectangle(225, 267, 36, 36);
+            enemyRect2 = new Rectangle(530, 267, 36, 36);
 
-            enemyRect3 = new Rectangle(225,372,36,36);
+            enemyRect3 = new Rectangle(530,372,36,36);
 
             enemyRect4 = new Rectangle(220,50,30,75);
 
@@ -141,9 +141,9 @@ namespace Monogame_Final_Project
 
             enemySpeed = new Vector2(4,0);
 
-            enemySpeed2 = new Vector2(2,0);
+            enemySpeed2 = new Vector2(-4,0);
 
-            enemySpeed3 = new Vector2(2,0);
+            enemySpeed3 = new Vector2(-4,0);
 
             enemySpeed4 = new Vector2(4,0);
 
@@ -151,9 +151,9 @@ namespace Monogame_Final_Project
 
             enemySpeed6 = new Vector2(-4,0);
 
-            enemySpeed7 = new Vector2(-2,0);
+            enemySpeed7 = new Vector2(-5,0);
 
-            enemySpeed8 = new Vector2(2,0);
+            enemySpeed8 = new Vector2(5,0);
 
             stageTwoRect = new Rectangle(-150, -175, 1100, 900);
 
@@ -167,30 +167,32 @@ namespace Monogame_Final_Project
 
             endScreenRect = new Rectangle(0,0,800,600);
 
+            endButtonRect = new Rectangle(520,445,240,72);
+
             base.Initialize();
             stageOneBarriers.Add(new Rectangle(195,260,30,150));
-            stageOneBarriers.Add(new Rectangle(573, 264, 30, 150));
+            stageOneBarriers.Add(new Rectangle(573, 265, 30, 150));
 
-            stageOneBarriers.Add(new Rectangle(195, 220, 341, 45));
-            stageOneBarriers.Add(new Rectangle(262, 416, 341, 40));
+            stageOneBarriers.Add(new Rectangle(195, 215, 341, 45));
+            stageOneBarriers.Add(new Rectangle(264, 415, 341, 40));
 
             stageOneBarriers.Add(new Rectangle(77, 452, 640, 40));
             stageOneBarriers.Add(new Rectangle(77, 183, 640, 40));
 
-            stageOneBarriers.Add(new Rectangle(39, 225, 50, 225));
-            stageOneBarriers.Add(new Rectangle(708, 225, 50, 225));
+            stageOneBarriers.Add(new Rectangle(38, 225, 50, 225));
+            stageOneBarriers.Add(new Rectangle(710, 225, 50, 225));
 
-            stageTwoBarriers.Add(new Rectangle(159, 240, 480, 75));
-            stageTwoBarriers.Add(new Rectangle(90,126,75,300));
+            stageTwoBarriers.Add(new Rectangle(159, 239, 482, 73));
+            stageTwoBarriers.Add(new Rectangle(90,128,73,296));
 
             stageTwoBarriers.Add(new Rectangle(50, 47, 40, 475));
-            stageTwoBarriers.Add(new Rectangle(53, 27, 625, 20));
+            stageTwoBarriers.Add(new Rectangle(53, 29, 625, 20));
 
-            stageTwoBarriers.Add(new Rectangle(678,27,35,135));
+            stageTwoBarriers.Add(new Rectangle(680,27,35,135));
             stageTwoBarriers.Add(new Rectangle(680, 390, 35, 135));
 
             stageTwoBarriers.Add(new Rectangle(715, 27, 40, 475));
-            stageTwoBarriers.Add(new Rectangle(90, 500, 600, 35));
+            stageTwoBarriers.Add(new Rectangle(90, 502, 600, 35));
 
          
         }
@@ -215,6 +217,7 @@ namespace Monogame_Final_Project
             deathFont = Content.Load<SpriteFont>("death");
             bgMusic = Content.Load<SoundEffect>("music");
             endScreenTexture = Content.Load<Texture2D>("endScreen");
+            endButtonTexture = Content.Load<Texture2D>("quitButton");
         }
 
         protected override void Update(GameTime gameTime)
@@ -498,6 +501,14 @@ namespace Monogame_Final_Project
             if (screen == Screen.End)
             {
                 this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+
+                    if (endButtonRect.Contains(mouseState.Position))
+                    {
+                        Exit();
+                    }
+                }
             }
             // TODO: Add your update logic here
 
@@ -523,7 +534,6 @@ namespace Monogame_Final_Project
             {
                 foreach (Rectangle barrier in stageOneBarriers)
                     _spriteBatch.Draw(rectangleTexture, barrier, Color.White);
-
 
                 _spriteBatch.Draw(rectangleTexture, goalArea1Rect, Color.White);
 
@@ -568,9 +578,6 @@ namespace Monogame_Final_Project
 
                 _spriteBatch.Draw(enemyTexture, enemyRect8, Color.White);
 
-                foreach (Rectangle barrier in stageTwoBarriers)
-                    _spriteBatch.Draw(rectangleTexture, barrier, Color.White);
-
                 _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(700, 45), Color.Black);
 
                 _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(675, 15), Color.Black);
@@ -581,7 +588,9 @@ namespace Monogame_Final_Project
             {
                 _spriteBatch.Draw(endScreenTexture, endScreenRect, Color.White);
 
-                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(415, 225), Color.Black);
+                _spriteBatch.Draw(endButtonTexture, endButtonRect, Color.White);
+
+                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(410, 220), Color.Black);
 
                 _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(390, 175), Color.Black);
             }
