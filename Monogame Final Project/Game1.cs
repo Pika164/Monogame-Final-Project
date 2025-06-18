@@ -82,9 +82,6 @@ namespace Monogame_Final_Project
 
         SpriteFont deathFont;
 
-        SoundEffect bgMusic;
-        SoundEffectInstance bgMusicplaying;
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -215,7 +212,6 @@ namespace Monogame_Final_Project
             enemyTexture2 = Content.Load<Texture2D>("enemy (1)");
             enemyTexture3 = Content.Load<Texture2D>("enemy (2)");
             deathFont = Content.Load<SpriteFont>("death");
-            bgMusic = Content.Load<SoundEffect>("music");
             endScreenTexture = Content.Load<Texture2D>("endScreen");
             endButtonTexture = Content.Load<Texture2D>("quitButton");
         }
@@ -224,11 +220,6 @@ namespace Monogame_Final_Project
         {
             mouseState = Mouse.GetState();
             keyboardState = Keyboard.GetState();
-
-
-            //sound 
-
-            bgMusic.Play();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
