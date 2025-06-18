@@ -36,7 +36,10 @@ namespace Monogame_Final_Project
         Texture2D enemyTexture3;
         Texture2D endScreenTexture;
         Texture2D endButtonTexture;
+        Texture2D tryAgainTexture;
+        Texture2D coinTexture;
 
+        Rectangle tryAgainRect;
         Rectangle endButtonRect;
         Rectangle endScreenRect;
         Rectangle enemyRect;
@@ -62,6 +65,8 @@ namespace Monogame_Final_Project
 
         List<Rectangle> stageOneBarriers;
         List<Rectangle> stageTwoBarriers;
+        List<Rectangle> stageOneCoin;
+        List<Rectangle> stageTwoCoin;
 
         Vector2 playerSpeed;
         Vector2 enemySpeed;
@@ -82,6 +87,13 @@ namespace Monogame_Final_Project
 
         SpriteFont deathFont;
 
+        SoundEffect bgMusic;
+        SoundEffectInstance bgMusicInstance;
+
+        bool musicStarted;
+
+        int coinCount;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -98,7 +110,7 @@ namespace Monogame_Final_Project
             _graphics.PreferredBackBufferHeight = window.Height;
             _graphics.ApplyChanges();
 
-
+            musicStarted = false;
 
             // TODO: Add your initialization logic here
 
@@ -148,9 +160,11 @@ namespace Monogame_Final_Project
 
             enemySpeed6 = new Vector2(-4,0);
 
-            enemySpeed7 = new Vector2(-5,0);
+            enemySpeed7 = new Vector2(-4,0);
 
-            enemySpeed8 = new Vector2(5,0);
+            enemySpeed8 = new Vector2(4,0);
+
+            tryAgainRect = new Rectangle(520,390,240,72);
 
             stageTwoRect = new Rectangle(-150, -175, 1100, 900);
 
@@ -160,11 +174,15 @@ namespace Monogame_Final_Project
 
             stageTwoBarriers = new List<Rectangle>();
 
+            stageOneCoin = new List<Rectangle>();
+
+            stageTwoCoin = new List<Rectangle>();
+
             deaths = 0;
 
             endScreenRect = new Rectangle(0,0,800,600);
 
-            endButtonRect = new Rectangle(520,445,240,72);
+            endButtonRect = new Rectangle(520,485,240,72);
 
             base.Initialize();
             stageOneBarriers.Add(new Rectangle(195,260,30,150));
@@ -191,7 +209,16 @@ namespace Monogame_Final_Project
             stageTwoBarriers.Add(new Rectangle(715, 27, 40, 475));
             stageTwoBarriers.Add(new Rectangle(90, 502, 600, 35));
 
-         
+            stageOneCoin.Add(new Rectangle(250,330,10,10));
+            stageOneCoin.Add(new Rectangle(350, 370, 10, 10));
+            stageOneCoin.Add(new Rectangle(460, 280, 10, 10));
+            stageOneCoin.Add(new Rectangle(540, 360, 10, 10));
+
+            stageTwoCoin.Add(new Rectangle(250, 330, 10, 10));
+            stageTwoCoin.Add(new Rectangle(645, 60, 10, 10));
+            stageTwoCoin.Add(new Rectangle(200, 215, 10, 10));
+            stageTwoCoin.Add(new Rectangle(645, 475, 10, 10));
+            stageTwoCoin.Add(new Rectangle(680, 275, 10, 10));
         }
 
         protected override void LoadContent()
@@ -212,8 +239,14 @@ namespace Monogame_Final_Project
             enemyTexture2 = Content.Load<Texture2D>("enemy (1)");
             enemyTexture3 = Content.Load<Texture2D>("enemy (2)");
             deathFont = Content.Load<SpriteFont>("death");
+            bgMusic = Content.Load<SoundEffect>("music");
             endScreenTexture = Content.Load<Texture2D>("endScreen");
             endButtonTexture = Content.Load<Texture2D>("quitButton");
+            coinTexture = Content.Load<Texture2D>("Corn");
+            tryAgainTexture = Content.Load<Texture2D>("tryAgainButton");
+
+            bgMusicInstance = bgMusic.CreateInstance();
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -224,6 +257,11 @@ namespace Monogame_Final_Project
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (!musicStarted)
+            {
+                bgMusicInstance.Play();
+                musicStarted = true;
+            }
 
             if (screen == Screen.Intro)
             {
@@ -280,6 +318,16 @@ namespace Monogame_Final_Project
 
                 playerLocation += playerSpeed;
                 playerRect.Location = playerLocation.ToPoint();
+
+                for (int i = 0; i < stageOneCoin.Count; i++)
+                {
+                    if (playerRect.Intersects(stageOneCoin[i]))
+                    {
+                        stageOneCoin.RemoveAt(i);
+                        i--;
+                       coinCount++;
+                    }
+                }
 
                 foreach (Rectangle barrier in stageOneBarriers)
                     if (playerRect.Intersects(barrier))
@@ -389,6 +437,16 @@ namespace Monogame_Final_Project
                 playerLocation += playerSpeed;
                 playerRect2.Location = playerLocation.ToPoint();
 
+                for (int i = 0; i < stageTwoCoin.Count; i++)
+                {
+                    if (playerRect2.Intersects(stageTwoCoin[i]))
+                    {
+                        stageTwoCoin.RemoveAt(i);
+                        i--;
+                        coinCount++;
+                    }
+                }
+
                 foreach (Rectangle barrier in stageTwoBarriers)
                     if (enemyRect4.Intersects(barrier))
                     {
@@ -442,8 +500,8 @@ namespace Monogame_Final_Project
 
                 if (enemyRect7.Intersects(playerRect2))
                 {
-                    playerRect2.X = 129;
-                    playerRect2.Y = 79;
+                    playerRect2.X = 675;
+                    playerRect2.Y = 275;
                     playerRect.Location = playerLocation.ToPoint();
                     deaths += 1;
                 }
@@ -461,8 +519,8 @@ namespace Monogame_Final_Project
 
                 if (enemyRect8.Intersects(playerRect2))
                 {
-                    playerRect2.X = 129;
-                    playerRect2.Y = 79;
+                    playerRect2.X = 675;
+                    playerRect2.Y = 275;
                     playerRect.Location = playerLocation.ToPoint();
                     deaths += 1;
                 }
@@ -494,10 +552,24 @@ namespace Monogame_Final_Project
                 this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-
                     if (endButtonRect.Contains(mouseState.Position))
                     {
                         Exit();
+                    }
+                }
+
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (tryAgainRect.Contains(mouseState.Position))
+                    {
+                        screen = Screen.Level1;
+                        playerLocation.X = 168;
+                        playerLocation.Y = 250;
+                        playerRect.Location = playerLocation.ToPoint();
+
+                        playerRect2.X = 129;
+                        playerRect2.Y = 79;
+                        playerRect.Location = playerLocation.ToPoint();
                     }
                 }
             }
@@ -540,7 +612,16 @@ namespace Monogame_Final_Project
 
                 _spriteBatch.Draw(playerTexture, playerRect, Color.White);
 
+                foreach (Rectangle barrier in stageOneCoin)
+                    _spriteBatch.Draw(coinTexture, barrier, Color.White);
+
                 _spriteBatch.DrawString(deathFont, (deaths).ToString("000"), new Vector2(675, 45), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, (coinCount).ToString("0"), new Vector2(70, 45), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "/9", new Vector2(85, 45), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "Coins", new Vector2(50, 15), Color.Black);
 
                 _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(655,15), Color.Black);
 
@@ -569,9 +650,18 @@ namespace Monogame_Final_Project
 
                 _spriteBatch.Draw(enemyTexture, enemyRect8, Color.White);
 
-                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(700, 45), Color.Black);
+                foreach (Rectangle barrier in stageTwoCoin)
+                    _spriteBatch.Draw(coinTexture, barrier, Color.White);
 
-                _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(675, 15), Color.Black);
+                _spriteBatch.DrawString(deathFont, (coinCount).ToString("0"), new Vector2(25, 45), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "/9", new Vector2(40, 45), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "Coins", new Vector2(5, 15), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(715, 45), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(690, 15), Color.Black);
 
             }
 
@@ -581,9 +671,17 @@ namespace Monogame_Final_Project
 
                 _spriteBatch.Draw(endButtonTexture, endButtonRect, Color.White);
 
-                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(410, 220), Color.Black);
+                _spriteBatch.Draw(tryAgainTexture, tryAgainRect, Color.White);
 
-                _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(390, 175), Color.Black);
+                _spriteBatch.DrawString(deathFont, (coinCount).ToString("0"), new Vector2(430, 145), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "/9", new Vector2(445, 145), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "Total Coins Collected", new Vector2(300, 105), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(420, 225), Color.Black);
+
+                _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(400, 195), Color.Black);
             }
 
             _spriteBatch.End();
