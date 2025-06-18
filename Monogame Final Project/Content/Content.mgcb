@@ -170,6 +170,12 @@
 /processorParam:TextureFormat=Color
 /build:quitButton.png
 
+#begin retro-game-coin-sound-effect.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:retro-game-coin-sound-effect.wav
+
 #begin stageFilling.png
 /importer:TextureImporter
 /processor:TextureProcessor

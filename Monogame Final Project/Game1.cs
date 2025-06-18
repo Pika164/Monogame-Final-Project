@@ -90,6 +90,9 @@ namespace Monogame_Final_Project
         SoundEffect bgMusic;
         SoundEffectInstance bgMusicInstance;
 
+        SoundEffect coinPickupSound;
+        SoundEffectInstance coinPickupInstance;
+
         bool musicStarted;
 
         int coinCount;
@@ -244,9 +247,10 @@ namespace Monogame_Final_Project
             endButtonTexture = Content.Load<Texture2D>("quitButton");
             coinTexture = Content.Load<Texture2D>("Corn");
             tryAgainTexture = Content.Load<Texture2D>("tryAgainButton");
+            coinPickupSound = Content.Load<SoundEffect>("retro-game-coin-sound-effect");
 
             bgMusicInstance = bgMusic.CreateInstance();
-
+            coinPickupInstance = coinPickupSound.CreateInstance();
         }
 
         protected override void Update(GameTime gameTime)
@@ -326,6 +330,7 @@ namespace Monogame_Final_Project
                         stageOneCoin.RemoveAt(i);
                         i--;
                        coinCount++;
+                       coinPickupSound.Play();
                     }
                 }
 
@@ -444,6 +449,7 @@ namespace Monogame_Final_Project
                         stageTwoCoin.RemoveAt(i);
                         i--;
                         coinCount++;
+                        coinPickupSound.Play();
                     }
                 }
 
