@@ -135,7 +135,7 @@ namespace Monogame_Final_Project
 
             introButtonRect = new Rectangle(500,450,240,72);
 
-            enemyRect = new Rectangle(230,320,36,36);
+            enemyRect = new Rectangle(230,318,38,38);
 
             enemyRect2 = new Rectangle(530, 267, 36, 36);
 
@@ -145,7 +145,7 @@ namespace Monogame_Final_Project
 
             enemyRect5 = new Rectangle(220, 160, 30, 75);
 
-            enemyRect6 = new Rectangle(630,50,30,120);
+            enemyRect6 = new Rectangle(630,50,30,105);
 
             enemyRect7 = new Rectangle(645,380,30,120);
 
@@ -218,9 +218,9 @@ namespace Monogame_Final_Project
             stageOneCoin.Add(new Rectangle(540, 360, 10, 10));
 
             stageTwoCoin.Add(new Rectangle(250, 330, 10, 10));
-            stageTwoCoin.Add(new Rectangle(645, 60, 10, 10));
+            stageTwoCoin.Add(new Rectangle(645, 100, 10, 10));
             stageTwoCoin.Add(new Rectangle(200, 215, 10, 10));
-            stageTwoCoin.Add(new Rectangle(645, 475, 10, 10));
+            stageTwoCoin.Add(new Rectangle(645, 445, 10, 10));
             stageTwoCoin.Add(new Rectangle(680, 275, 10, 10));
         }
 
@@ -687,7 +687,7 @@ namespace Monogame_Final_Project
 
                 _spriteBatch.DrawString(deathFont, (0 + deaths).ToString("000"), new Vector2(420, 225), Color.Black);
 
-                _spriteBatch.DrawString(deathFont, "Deaths", new Vector2(400, 195), Color.Black);
+                _spriteBatch.DrawString(deathFont, "Total Deaths", new Vector2(350, 195), Color.Black);
             }
 
             _spriteBatch.End();
