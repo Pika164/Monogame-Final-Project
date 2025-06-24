@@ -291,8 +291,6 @@ namespace Monogame_Final_Project
                 enemyRect2.X += (int)enemySpeed2.X;
                 enemyRect3.X += (int)enemySpeed3.X;
 
-                this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
-
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
                     playerSpeed.X -= (float)2.0;
@@ -413,8 +411,6 @@ namespace Monogame_Final_Project
                 enemyRect6.X += (int)enemySpeed6.X;
                 enemyRect7.X += (int)enemySpeed7.X;
                 enemyRect8.X += (int)enemySpeed8.X;
-
-                this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
 
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
@@ -555,7 +551,7 @@ namespace Monogame_Final_Project
 
             if (screen == Screen.End)
             {
-                this.Window.Title = "X = " + mouseState.X + "Y = " + mouseState.Y;
+
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
                     if (endButtonRect.Contains(mouseState.Position))
